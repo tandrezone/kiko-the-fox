@@ -14,8 +14,8 @@ declare(strict_types=1);
  */
 
 return [
-    'password'         => 'kikohome',
-    'redirect_success' => 'https:/chemheaven.cc',
+    'password'         => 'gggg',
+    'redirect_success' => 'https://chemheaven.cc',
     'redirect_fail'    => 'https://www.google.com',
 
     // wrong guesses allowed per browser session before each retry gets
