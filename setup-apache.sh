@@ -240,6 +240,15 @@ else
         echo "        Require all granted"
         echo "    </Directory>"
         echo
+        echo "    # clean URL for the gate's redirect target"
+        echo "    RewriteEngine On"
+        echo "    RewriteRule \"^/?enter/?$\" \"/enter.php\" [L]"
+        echo
+        echo "    # config.php holds the gate password; never serve it directly"
+        echo "    <Files \"config.php\">"
+        echo "        Require all denied"
+        echo "    </Files>"
+        echo
         echo "    # the score board is served through api/scores.php, never raw"
         echo "    <Files \"scores.json\">"
         echo "        Require all denied"

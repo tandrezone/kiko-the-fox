@@ -8,15 +8,40 @@ files — every sprite, tile and sound is generated at runtime.
 ## Running it
 
 ```
-cd "the game"
-php -S localhost:8000
+php -S localhost:8000 router.php
 ```
 
-Then open <http://localhost:8000>. Click once (or press any key) to let the
-browser start audio, and you're in.
+Then open <http://localhost:8000>. You'll land on the gate; click the fox
+and type the password (see below) to get to the game itself. Click once
+inside the game (or press any key) to let the browser start audio, and
+you're in.
 
-Dropping the folder into an Apache/XAMPP docroot works too — nothing depends
-on the built-in server. PHP 7.4+ is enough.
+`router.php` is only there so the built-in server understands the clean
+`/enter` URL the gate redirects to — it just hands the request to `enter.php`
+and falls through to a real file or `index.php` for everything else. Running
+`php -S localhost:8000` without it still works, but `/enter` would need to be
+typed as `/enter.php`.
+
+Dropping the folder into an Apache/XAMPP docroot works too — `setup-apache.sh`
+writes the equivalent rewrite rule straight into the vhost, since it doesn't
+rely on `.htaccess`. PHP 7.4+ is enough (password hashing via `hash_equals`
+needs nothing extra).
+
+## The gate
+
+`index.php` is a password gate in front of the game, styled to match it but
+built with plain CSS and inline SVG — no `<canvas>`. Click the fox logo to
+open the password prompt.
+
+- `config.php` holds the password and the two redirects: `redirect_success`
+  (where a right guess goes — `/enter` by default) and `redirect_fail`
+  (where a wrong one goes — `https://www.google.com` by default). Edit the
+  values there; nothing else needs to change.
+- `api/auth.php` checks the password server-side and answers with which
+  redirect to use. The password itself is never sent to the browser.
+- A right guess also marks the PHP session unlocked, so `enter.php` (the
+  game) refuses to render and bounces back to `/` for anyone who tries to
+  open it directly without going through the gate first.
 
 ## Controls
 
@@ -66,12 +91,18 @@ This is the interesting part, and it is enforced rather than decorated:
 ## Layout
 
 ```
-index.php              page shell; injects config and script tags
+index.php              the gate; a password prompt in front of the game
+enter.php               the game shell; injects config and script tags
+config.php              gate password + the two redirect targets
+router.php              clean-URL router for `php -S`, not needed on Apache
+api/auth.php            checks the gate password, never the password itself
 api/levels.php         serves the cartridge, or one level plus its chunks
 api/scores.php         GET the board, POST a run (file-locked JSON store)
 data/levels.json       chunk pool + the three level definitions
 data/scores.json       created on first save
+assets/css/gate.css    the gate's look — no canvas, just CSS and inline SVG
 assets/css/style.css   bezel, integer scaling, scanlines, touch pad
+assets/js/gate.js      opens the password prompt, calls api/auth.php
 assets/js/nes.js       palette, sprite baking, framebuffer, bitmap font
 assets/js/chr.js       all the pixel art
 assets/js/audio.js     the synth and the songs
