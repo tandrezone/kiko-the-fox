@@ -1,23 +1,27 @@
 (() => {
   'use strict';
 
-  const logo   = document.getElementById('logo');
-  const gate   = document.getElementById('gate');
-  const term   = document.getElementById('term');
-  const form   = document.getElementById('pwform');
-  const input  = document.getElementById('pw');
-  const msg    = document.getElementById('msg');
-  const button = form.querySelector('button[type="submit"]');
+  const egg      = document.getElementById('egg');
+  const backdrop = document.getElementById('eggBackdrop');
+  const term     = document.getElementById('term');
+  const form     = document.getElementById('pwform');
+  const input    = document.getElementById('pw');
+  const msg      = document.getElementById('msg');
+  const button   = form.querySelector('button[type="submit"]');
+
+  if (!egg || !term) return; // markup not present, nothing to wire up
 
   let open = false;
 
   function openTerm() {
     open = true;
-    gate.classList.add('open');
-    logo.setAttribute('aria-expanded', 'true');
+    egg.setAttribute('aria-expanded', 'true');
+    backdrop.classList.remove('hidden');
     term.classList.remove('hidden');
-    // one frame so the "hidden -> visible" transition actually runs
-    requestAnimationFrame(() => term.classList.add('show'));
+    requestAnimationFrame(() => {
+      backdrop.classList.add('show');
+      term.classList.add('show');
+    });
     input.value = '';
     msg.textContent = '';
     msg.className = '';
@@ -28,13 +32,19 @@
 
   function closeTerm() {
     open = false;
+    egg.setAttribute('aria-expanded', 'false');
     term.classList.remove('show');
-    gate.classList.remove('open');
-    logo.setAttribute('aria-expanded', 'false');
-    setTimeout(() => { if (!open) term.classList.add('hidden'); }, 220);
+    backdrop.classList.remove('show');
+    setTimeout(() => {
+      if (!open) {
+        term.classList.add('hidden');
+        backdrop.classList.add('hidden');
+      }
+    }, 200);
   }
 
-  logo.addEventListener('click', () => (open ? closeTerm() : openTerm()));
+  egg.addEventListener('click', () => (open ? closeTerm() : openTerm()));
+  backdrop.addEventListener('click', closeTerm);
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && open) closeTerm();

@@ -2,10 +2,10 @@
 declare(strict_types=1);
 
 /**
- * Kiko the Fox — gate password check.
+ * Kiko the Fox — the easter egg's password check.
  *
  * POST { "password": "..." } as JSON. Always answers 200 with
- * { ok, redirect } — the gate just follows `redirect`, it never
+ * { ok, redirect } — the caller just follows `redirect`, it never
  * has to know *why*.
  */
 

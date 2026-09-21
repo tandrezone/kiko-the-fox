@@ -1,0 +1,138 @@
+/* ------------------------------------------------------------------
+   Kiko the Fox — the easter egg.
+   A tiny fox rivet riveted to the cabinet bezel; click it and a
+   password prompt appears over the game. No <canvas> involved —
+   just a small inline SVG mark and a CSS modal.
+   ------------------------------------------------------------------ */
+
+:root{
+  --panel:#17171d;
+  --edge:#2c2c36;
+  --ink:#c8c8d4;
+  --dim:#7c7c8c;
+  --hot:#fca044;
+  --hot-dark:#7a3b1a;
+  --good:#7bd68a;
+  --bad:#ff6b6b;
+}
+
+/* ---- the rivet itself ---- */
+#egg{
+  position:absolute;
+  right:3px;
+  bottom:3px;
+  z-index:5;
+  width:16px;
+  height:16px;
+  padding:0;
+  border:0;
+  background:none;
+  cursor:pointer;
+  opacity:.32;
+  transition:opacity .2s ease, transform .2s ease;
+}
+#egg svg{display:block;width:100%;height:100%;}
+#egg:hover,
+#egg:focus-visible{
+  opacity:1;
+  transform:scale(1.25);
+}
+#egg:focus-visible{outline:1px solid var(--hot);outline-offset:2px;}
+
+.fx-head{fill:var(--hot);}
+.fx-ear{fill:var(--hot-dark);}
+.fx-muzzle{fill:#f5e6c8;}
+.fx-eye{fill:#15151b;}
+.fx-nose{fill:#15151b;}
+
+/* ---- the modal ---- */
+#eggBackdrop{
+  position:fixed;
+  inset:0;
+  z-index:20;
+  background:rgba(6,6,8,.72);
+  opacity:0;
+  transition:opacity .2s ease;
+}
+#eggBackdrop.show{opacity:1;}
+#eggBackdrop.hidden{display:none;}
+
+#term{
+  position:fixed;
+  z-index:21;
+  top:50%;
+  left:50%;
+  width:100%;
+  max-width:280px;
+  background:linear-gradient(#1b1b23,var(--panel));
+  border:1px solid var(--edge);
+  border-radius:8px;
+  padding:18px 20px 16px;
+  box-shadow:0 0 0 1px #000, 0 18px 40px -18px #000, inset 0 1px 0 #2f2f3a;
+  font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  color:var(--ink);
+  opacity:0;
+  transform:translate(-50%,-46%) scale(.98);
+  transition:opacity .2s ease, transform .2s ease;
+}
+#term.hidden{display:none;}
+#term.show{opacity:1;transform:translate(-50%,-50%) scale(1);}
+
+.termhead{
+  font-size:11px;
+  letter-spacing:2px;
+  color:var(--hot);
+  margin-bottom:12px;
+}
+.blink{animation:egg-blink 1.1s step-start infinite;}
+@keyframes egg-blink{0%,49%{opacity:1;} 50%,100%{opacity:.25;}}
+
+#pwform{display:flex;flex-direction:column;gap:6px;}
+#pwform label{font-size:10px;letter-spacing:2px;color:var(--dim);}
+#pwform input{
+  appearance:none;
+  border:0;
+  border-bottom:1px solid var(--edge);
+  background:transparent;
+  color:var(--hot);
+  font:15px/1.4 inherit;
+  letter-spacing:3px;
+  padding:6px 2px;
+  outline:none;
+}
+#pwform input:focus{border-color:var(--hot);}
+#pwform input:disabled{opacity:.5;}
+
+#pwform button{
+  appearance:none;
+  border:0;
+  border-radius:5px;
+  margin-top:10px;
+  padding:9px 0;
+  background:linear-gradient(#fcb066,var(--hot));
+  color:#1a1005;
+  font:700 12px/1 inherit;
+  letter-spacing:2px;
+  cursor:pointer;
+  box-shadow:0 3px 0 #a35d1e;
+}
+#pwform button:active{transform:translateY(3px);box-shadow:none;}
+#pwform button:disabled{opacity:.55;cursor:default;box-shadow:none;transform:none;}
+
+#msg{
+  min-height:14px;
+  margin:12px 0 0;
+  font-size:11px;
+  letter-spacing:2px;
+  text-align:center;
+}
+#msg.good{color:var(--good);text-shadow:0 0 10px rgba(123,214,138,.55);}
+#msg.bad{color:var(--bad);text-shadow:0 0 10px rgba(255,107,107,.55);}
+
+.hint{
+  margin:10px 0 0;
+  font-size:10px;
+  letter-spacing:1px;
+  text-align:center;
+  color:#4d4d58;
+}

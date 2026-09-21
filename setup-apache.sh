@@ -240,7 +240,7 @@ else
         echo "        Require all granted"
         echo "    </Directory>"
         echo
-        echo "    # clean URL for the gate's redirect target"
+        echo "    # clean URL for the easter egg's secret page"
         echo "    RewriteEngine On"
         echo "    RewriteRule \"^/?enter/?$\" \"/enter.php\" [L]"
         echo
